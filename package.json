@@ -1,0 +1,28 @@
+{
+  "name": "api-sants-eazy",
+  "version": "1.0.0",
+  "description": "Proxy digital eazy",
+  "main": "./src/main.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node src/main.ts",
+    "token": "ts-node scripts/gerar-token.ts"
+  },
+  "author": "Luis Paulo <luis@lpdeveloper.com.br>",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.9.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.2",
+    "@types/jest": "^29.5.14",
+    "@types/jsonwebtoken": "^9.0.9",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.3.4"
+  }
+}
