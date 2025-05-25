@@ -1,5 +1,5 @@
 import AbstractRequest from '../../abstractRequest';
-import { AuthResponse, CreateAccountPayload, WebhookOrganizationPayload } from './types';
+import { AddressAccountPayload, AuthResponse, CreateAccountPayload, WebhookOrganizationPayload } from './types';
 
 class AccountService extends AbstractRequest {
     private static instance: AccountService;
@@ -12,6 +12,23 @@ class AccountService extends AbstractRequest {
         }
         super(baseUrl, 10000); // Base URL e timeout
         this.Authorization = process.env.DE_JWT_TOKEN ?? token;
+    }
+
+    async getById(accountId: string): Promise<any> {
+        try {
+            const response = await this.get(`/accounts/${accountId}`, {
+                headers: {
+                    Authorization: `Bearer ${this.Authorization}`
+                }
+            });
+
+            return response.data;
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new Error(`Failed to fetch account by ID: ${error.message}`);
+            }
+            throw new Error('Failed to fetch account by ID: An unknown error occurred');
+        }
     }
 
     async createAccount(payload: CreateAccountPayload): Promise<AuthResponse> {
@@ -31,6 +48,54 @@ class AccountService extends AbstractRequest {
             throw new Error('Account creation failed: An unknown error occurred');
         }
     }
+
+    async createAddress(payload: AddressAccountPayload): Promise<any> {
+        try {
+            const account = payload.accountId;
+            delete payload.accountId;
+
+
+            const response = await this.post(`/accounts/${account}/addresses`, payload, {
+                headers: {
+                    Authorization: `Bearer ${this.Authorization}`
+                }
+            });
+
+            return response.data;
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new Error(`Webhook setting failed: ${error.message}`);
+            }
+            throw new Error('createAddress setting failed: An unknown error occurred');
+        }
+    }
+
+    async createPhone(payload: {
+        country_code: string;
+        area_code: number;
+        number: string;
+        type: "MOBILE" | "LANDLINE";
+        accountId: number | undefined;
+    }): Promise<any> {
+        try {
+            const account = payload.accountId;
+            delete payload.accountId;
+
+            const response = await this.post(`/accounts/${account}/phones`, payload, {
+                headers: {
+                    Authorization: `Bearer ${this.Authorization}`
+                }
+            });
+
+            return response.data;
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new Error(`Webhook setting failed: ${error.message}`);
+            }
+            throw new Error('createAddress setting failed: An unknown error occurred');
+        }
+    }
+
 
     async setWebhook(payload: WebhookOrganizationPayload): Promise<any> {
         try {

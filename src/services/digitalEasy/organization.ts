@@ -36,14 +36,39 @@ class OrganizationService extends AbstractRequest {
         }
     }
 
-    static getInstance(token?:string|undefined): OrganizationService {
+    public async listAllAccounts(page?: number, perPage?: number, q?: string | undefined): Promise<any> {
+        try {
+
+            const response = await this.get('/accounts',
+                {
+                    headers: {
+                        Authorization: `Bearer ${this.Authorization}`
+                    },
+                    params: {
+                        page: page ?? 1,
+                        perPage: perPage ?? 50,
+                        q
+                    }
+                }
+
+            );
+            return response.data;
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new Error(`Failed to fetch organizations: ${error.message}`);
+            }
+            throw new Error('Failed to fetch organizations: An unknown error occurred');
+        }
+    }
+
+    static getInstance(token?: string | undefined): OrganizationService {
         if (!OrganizationService.instance) {
             OrganizationService.instance = new OrganizationService(token);
         }
         return OrganizationService.instance;
     }
-    
+
 
 }
 
-export default  OrganizationService;
+export default OrganizationService;

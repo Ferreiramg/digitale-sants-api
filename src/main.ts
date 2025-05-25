@@ -33,12 +33,16 @@ app.get("/health", (req: Request, res: Response) => {
   res.status(200).json({ message: "Server is healthy!" });
 });
 
-//app.post("/login", LoginController.login);
+app.post("/login", LoginController.login);
 
 app.get('/organization', OrganizationController.get);
+app.get('/accounts', OrganizationController.getAccounts);
 
 app.post('/account', AccountController.create);
-
+app.get('/account', AccountController.getById);
+app.post('/account/address', AccountController.address);
+app.post('/account/phone', AccountController.phone);
+app.post('/account/full', AccountController.createFullAccount);
 app.post('/account/set/webhook', AccountController.setWebhook);
 
 app.listen(PORT, () => {

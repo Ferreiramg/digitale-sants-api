@@ -60,3 +60,16 @@ export interface WebhookOrganizationPayload {
     webhookAuthorizationUri?: string;
     webhookAuthorizationToken?: string;
 }
+
+export interface AddressAccountPayload {
+    accountId: number | undefined;
+    address_type: string;
+    address: string;
+    number: number;
+    neighborhood: string;
+    zip_code: string;
+    city: string;
+    state: string;
+    country: string;
+    complementary_address?: string;
+}
