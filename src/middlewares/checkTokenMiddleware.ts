@@ -2,11 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import ApiService from '../services/digitalEasy/auth';
 
-import dotenv from 'dotenv';
-dotenv.config();
-
-const username = process.env.DIGITAL_EASY_USERNAME ?? '';
-const password = process.env.DIGITAL_EASY_PASSWORD ?? '';
+const email = process.env.DE_ORGANIZACION_EMAIL ?? '';
+const password = process.env.DE_ORGANIZACION_PASS ?? '';
 
 const checkTokenMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const token_time = req.user.de_token_expires_at;
@@ -17,7 +14,7 @@ const checkTokenMiddleware = (req: Request, res: Response, next: NextFunction) =
 
         if (token_time - refreshThreshold < now) {
 
-            ApiService.getInstance().login(username, password).then((response) => {
+            ApiService.getInstance().login(email, password).then((response) => {
 
                 const { token } = response;
 
