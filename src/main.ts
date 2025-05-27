@@ -8,6 +8,7 @@ import { AccountController } from "./controllers/account";
 import authMiddleware from "./middlewares/authMiddleware";
 import checkTokenMiddleware from "./middlewares/checkTokenMiddleware";
 import { OrganizationController } from "./controllers/organization";
+import { CardController } from "./controllers/card";
 
 dotenv.config();
 
@@ -28,7 +29,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(authMiddleware);
 app.use(checkTokenMiddleware);
 
-
 app.get("/health", (req: Request, res: Response) => {
   res.status(200).json({ message: "Server is healthy!" });
 });
@@ -44,6 +44,12 @@ app.post('/account/address', AccountController.address);
 app.post('/account/phone', AccountController.phone);
 app.post('/account/full', AccountController.createFullAccount);
 app.post('/account/set/webhook', AccountController.setWebhook);
+
+app.get('/card/:cardId/account/:accountId', CardController.getCardDetails);
+app.post('/card/:cardId/account/:accountId/block', CardController.blockCard);
+app.post('/card/:cardId/account/:accountId/unblock', CardController.unblockCard);
+
+app.post('/card', CardController.createCard);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

@@ -1,4 +1,5 @@
 import AbstractRequest from '../../abstractRequest';
+import { CardPayloadCreate, CardResponseCreate } from './types';
 
 class CardService extends AbstractRequest {
     private static instance: CardService;
@@ -13,9 +14,106 @@ class CardService extends AbstractRequest {
         this.Authorization = process.env.DE_JWT_TOKEN ?? token;
     }
 
-    // Example method
-    async getCardDetails(cardId: string) {
-        return this.get(`/cards/${cardId}`);
+
+    async getCardDetails(cardId: string, accountId: string): Promise<any> {
+
+        try {
+            const response = await this.get(`/cards/${cardId}/accounts/${accountId}`, {
+                headers: {
+                    Authorization: `Bearer ${this.Authorization}`
+                }
+            });
+            return response.data;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                throw new Error(`Failed to fetch card details: ${error.message}`);
+            }
+            throw new Error('Failed to fetch card details: An unknown error occurred');
+        }
+    }
+    async blockCard(cardId: string, accountId: string, password: string): Promise<any> {
+
+        try {
+            const response = await this.get(`/cards/${cardId}/accounts/${accountId}/block`, {
+                headers: {
+                    Authorization: `Bearer ${this.Authorization}`
+                },
+                data: { password }
+
+            });
+            return response.data;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                throw new Error(`Failed to fetch card details: ${error.message}`);
+            }
+            throw new Error('Failed to fetch card details: An unknown error occurred');
+        }
+    }
+
+    async unblockCard(cardId: string, accountId: string, password: string): Promise<any> {
+        try {
+            const response = await this.get(`/cards/${cardId}/accounts/${accountId}/unblock`, {
+                headers: {
+                    Authorization: `Bearer ${this.Authorization}`
+                },
+                data: { password }
+            });
+            return response.data;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                throw new Error(`Failed to unblock card: ${error.message}`);
+            }
+            throw new Error('Failed to unblock card: An unknown error occurred');
+        }
+    }
+
+    async createCard(payload: CardPayloadCreate): Promise<CardResponseCreate> {
+        try {
+            const response = await this.post<CardResponseCreate>('/cards', payload, {
+                headers: {
+                    Authorization: `Bearer ${this.Authorization}`
+                }
+            });
+            return response.data;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                throw new Error(`Card creation failed: ${error.message}`);
+            }
+            throw new Error('Card creation failed: An unknown error occurred');
+        }
+    }
+
+    async getCardsByAccount(accountId: string, page?: number, perPage?: number): Promise<any> {
+        try {
+            const response = await this.get(`/cards`, {
+                headers: {
+                    Authorization: `Bearer ${this.Authorization}`
+                },
+                params: {
+                    accountId,
+                    page: page ?? 1,
+                    perPage: perPage ?? 50
+                }
+            });
+            return response.data;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                throw new Error(`Failed to fetch cards by account: ${error.message}`);
+            }
+            throw new Error('Failed to fetch cards by account: An unknown error occurred');
+        }
+    }
+
+    static getInstance(token?: string): CardService {
+        if (!CardService.instance) {
+            CardService.instance = new CardService(token);
+        }
+        return CardService.instance;
     }
 
     // Add more service methods as needed

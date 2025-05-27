@@ -73,3 +73,32 @@ export interface AddressAccountPayload {
     country: string;
     complementary_address?: string;
 }
+
+export interface CardPayloadCreate {
+    type: "VIRTUAL" | "PLASTIC";
+    name: string;
+    embossing_name: string;
+    transaction_limit: number;
+    accountId: string;
+    customerId: number;
+}
+
+export interface CardResponseCreate {
+    message: string;
+    card: {
+        _id: string;
+        card_id: number;
+        name: string;
+        printed_name: string;
+        type: "VIRTUAL" | "PLASTIC";
+        status: string;
+        contactless_enabled: boolean;
+        cvv_rotation_interval_hours: number;
+        transaction_limit: number;
+        abu_enabled: boolean;
+        customer_id: number;
+        account_id: number;
+        createdAt: string;
+        updatedAt: string;
+    };
+}
