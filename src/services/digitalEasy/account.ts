@@ -95,24 +95,7 @@ class AccountService extends AbstractRequest {
             throw new Error('createAddress setting failed: An unknown error occurred');
         }
     }
-
-
-    async setWebhook(payload: WebhookOrganizationPayload): Promise<any> {
-        try {
-            const response = await this.post('/organizations/current', payload, {
-                headers: {
-                    Authorization: `Bearer ${this.Authorization}`
-                }
-            });
-
-            return response.data;
-        } catch (error) {
-            if (error instanceof Error) {
-                throw new Error(`Webhook setting failed: ${error.message}`);
-            }
-            throw new Error('Webhook setting failed: An unknown error occurred');
-        }
-    }
+    
 
     static getInstance(token?: string | undefined): AccountService {
         if (!AccountService.instance) {

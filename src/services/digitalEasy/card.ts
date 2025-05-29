@@ -109,6 +109,23 @@ class CardService extends AbstractRequest {
         }
     }
 
+    async getCardPin(cardId: string, accountId: string): Promise<string> {
+        try {
+            const response = await this.get(`/cards/${cardId}/accounts/${accountId}/password`, {
+                headers: {
+                    Authorization: `Bearer ${this.Authorization}`
+                }
+            });
+            return (response.data as { pin: string }).pin;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                throw new Error(`Failed to fetch card PIN: ${error.message}`);
+            }
+            throw new Error('Failed to fetch card PIN: An unknown error occurred');
+        }
+    }
+
     static getInstance(token?: string): CardService {
         if (!CardService.instance) {
             CardService.instance = new CardService(token);
